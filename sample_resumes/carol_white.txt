@@ -1,0 +1,36 @@
+Carol White
+carol.white@email.com | github.com/carolw | Portland, OR
+
+SUMMARY
+Mid-level Python developer with 4 years of experience building backend APIs and
+data services. Comfortable with async patterns, REST design, and cloud deployments.
+Currently looking to grow into a senior role at a product-focused company.
+
+EXPERIENCE
+
+Python Backend Developer – DataFlow Systems                  2022 – Present
+- Developed REST APIs in FastAPI for internal analytics dashboards (10k DAU)
+- Wrote async data ingestion workers consuming from SQS queues
+- Maintained PostgreSQL schemas; wrote migration scripts with Alembic
+- Improved test coverage from 55% to 82% using pytest and factory_boy
+- Deployed services on AWS ECS; wrote GitHub Actions pipelines for CI/CD
+
+Software Developer – RetailTech Co.                         2020 – 2022
+- Built Django REST APIs for e-commerce inventory management platform
+- Integrated with Stripe for subscription billing (basic plan management)
+- Worked with Docker and docker-compose for local and staging environments
+- Participated in code reviews; onboarded 2 new junior developers
+
+Junior Developer – Webcraft Studio                          2019 – 2020
+- Built Python scripts to automate client reporting from Google Analytics
+- Maintained Flask web applications for small business clients
+
+SKILLS
+Languages: Python, SQL, JavaScript (basic)
+Frameworks: FastAPI, Django, Flask, SQLAlchemy, pytest
+Cloud: AWS (ECS, SQS, RDS), Docker
+Databases: PostgreSQL, MySQL, Redis
+Tools: Git, GitHub Actions, Jira, Confluence
+
+EDUCATION
+B.S. Information Systems – Portland State University, 2019

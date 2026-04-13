@@ -1,0 +1,33 @@
+Senior Python Developer – Payments Platform
+FinFlow Technologies | Remote (US)
+
+About the Role
+We're building the next generation of real-time payment infrastructure and are looking for a
+Senior Python Developer to join our core platform team. You'll design and implement
+high-throughput microservices, own critical API integrations, and mentor junior engineers.
+
+Responsibilities
+- Design, build, and maintain Python-based microservices handling millions of transactions/day
+- Integrate with third-party payment providers (Stripe, Plaid, ACH networks)
+- Build and maintain REST and gRPC APIs consumed by web and mobile clients
+- Write high-quality tests (unit, integration, load) and maintain >90% coverage
+- Participate in on-call rotation and triage production incidents
+- Review code and mentor 2–3 junior engineers
+- Collaborate with Product and Design to refine technical requirements
+
+Required Qualifications
+- 5+ years of professional Python development experience
+- Strong understanding of async Python (asyncio, FastAPI or similar)
+- Experience with relational databases (PostgreSQL preferred) and query optimization
+- Familiarity with cloud platforms (AWS or GCP) and containerization (Docker, Kubernetes)
+- Solid grasp of software design patterns, SOLID principles, and clean code practices
+- Experience with CI/CD pipelines (GitHub Actions, CircleCI, etc.)
+
+Nice to Have
+- Prior experience in fintech, payments, or banking domains
+- Knowledge of PCI-DSS compliance requirements
+- Experience with message queues (Kafka, RabbitMQ, or SQS)
+- Contributions to open-source Python projects
+
+Compensation
+$160,000 – $195,000 base + equity + benefits

@@ -1,0 +1,38 @@
+David Kim
+david.kim@email.com | github.com/davidkimdev | Chicago, IL
+
+SUMMARY
+Motivated junior developer with 2 years of professional experience and a background
+in data science. Comfortable with Python scripting and data analysis; eager to
+transition into backend engineering. Quick learner who enjoys solving complex problems.
+
+EXPERIENCE
+
+Junior Data Engineer – InsightsCo                            2023 – Present
+- Wrote Python ETL scripts to extract data from 5 SaaS APIs (Salesforce, Zendesk, etc.)
+- Built Airflow DAGs to schedule nightly data pipeline runs
+- Created PostgreSQL views and stored procedures for BI reporting
+- Documented data models in Confluence
+
+Data Analyst Intern – MarketSense                           2022 – 2023
+- Used pandas and matplotlib to analyze customer churn patterns
+- Built Excel dashboards for sales leadership
+- Wrote SQL queries against Redshift data warehouse
+
+SKILLS
+Languages: Python (intermediate), SQL, R (basic)
+Python Libraries: pandas, numpy, requests, SQLAlchemy (basic)
+Tools: Airflow, dbt (basic), Jupyter, Git, Docker (basic)
+Databases: PostgreSQL, Redshift
+
+EDUCATION
+B.S. Statistics – University of Illinois at Chicago, 2022
+GPA: 3.6
+
+PROJECTS
+Personal Budget Tracker (GitHub)
+- Flask web app with SQLite backend for tracking personal expenses
+- Deployed on Heroku; ~50 monthly active users among friends/family
+
+CERTIFICATIONS
+- AWS Cloud Practitioner (in progress)

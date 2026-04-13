@@ -1,0 +1,39 @@
+Eve Johnson
+eve.johnson@email.com | github.com/evejohnson | New York, NY
+
+SUMMARY
+Full-stack Python engineer with 6 years of experience, including 3 years in financial
+services. Strong async Python skills, API design, and cloud-native deployments.
+Passionate about clean architecture and developer tooling.
+
+EXPERIENCE
+
+Senior Software Engineer – CapitalEdge (fintech startup)     2021 – Present
+- Built and maintained FastAPI microservices for real-time portfolio analytics serving
+  hedge fund clients; handled 500k+ API calls/day
+- Designed PostgreSQL database schema for trade history; optimized slow queries
+  (EXPLAIN ANALYZE, partial indexes) reducing dashboard load time by 60%
+- Integrated with brokerage APIs (Alpaca, Interactive Brokers) for order management
+- Led migration from monolithic Flask app to containerized microservices on AWS EKS
+- Established GitHub Actions CI pipeline with pytest, mypy, and coverage gates
+
+Python Developer – Globex Insurance                          2019 – 2021
+- Developed REST APIs for claims processing platform (Django REST Framework)
+- Worked with compliance team on data retention and audit logging requirements
+- Mentored 2 junior developers; led weekly tech talks on Python best practices
+
+Software Engineer – AppWorks Agency                         2018 – 2019
+- Delivered full-stack web applications for agency clients using Django + React
+
+SKILLS
+Languages: Python (expert), TypeScript, SQL
+Frameworks: FastAPI, Django, SQLAlchemy, Pydantic, pytest, asyncio
+Infrastructure: AWS (EKS, RDS, Lambda, SQS), Docker, Kubernetes, Terraform (basic)
+Databases: PostgreSQL, Redis, MongoDB
+Other: GitHub Actions, gRPC (basic), Datadog, PagerDuty
+
+EDUCATION
+B.S. Computer Science – NYU Tandon School of Engineering, 2018
+
+OPEN SOURCE
+Contributor to Pydantic (3 merged PRs) and FastAPI docs

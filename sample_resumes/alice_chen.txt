@@ -1,0 +1,42 @@
+Alice Chen
+alice.chen@email.com | github.com/alicechen | LinkedIn: /in/alicechen
+San Francisco, CA
+
+SUMMARY
+Senior Python Engineer with 8 years of experience building high-throughput financial systems.
+Led platform teams at two fintech companies, processing $2B+ in annual transaction volume.
+Deep expertise in async Python, payment APIs, and PCI-DSS compliance.
+
+EXPERIENCE
+
+Staff Python Engineer – LendBridge Inc.                          2021 – Present
+- Architected event-driven microservices in FastAPI handling 4M+ daily payment events
+- Led integration with Stripe, Plaid, and ACH rail providers; reduced settlement time by 40%
+- Designed PostgreSQL schema for transaction ledger; implemented query optimizations cutting
+  P99 latency from 320ms to 45ms
+- Championed PCI-DSS SAQ-D certification effort across engineering org
+- Mentored team of 4 junior engineers; authored internal async Python style guide
+- Maintained 94% test coverage across 11 microservices
+
+Senior Python Developer – PayRoute                               2019 – 2021
+- Built gRPC-based clearing service processing $500M/month in ACH transactions
+- Migrated legacy Django monolith to FastAPI microservices on Kubernetes (GKE)
+- Implemented Kafka consumers for real-time fraud signal processing
+- On-call rotation lead; drove MTTR down from 45 min to 8 min
+
+Python Developer – Acme Analytics                               2016 – 2019
+- Developed internal data pipeline platform using Celery and RabbitMQ
+- Built REST APIs serving 50+ internal stakeholders
+
+SKILLS
+Languages: Python (expert), Go (proficient), SQL
+Frameworks: FastAPI, asyncio, SQLAlchemy, Pydantic, pytest
+Infrastructure: AWS (ECS, RDS, SQS, Lambda), Docker, Kubernetes, Terraform
+Databases: PostgreSQL, Redis, DynamoDB
+Other: Kafka, GitHub Actions, PCI-DSS, gRPC
+
+EDUCATION
+B.S. Computer Science – UC San Diego, 2016
+
+OPEN SOURCE
+Maintainer of async-pgpool (2.1k GitHub stars) – connection pool library for asyncpg
