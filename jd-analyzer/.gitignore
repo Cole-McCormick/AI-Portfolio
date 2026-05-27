@@ -1,0 +1,4 @@
+# Local .env fallback (primary config lives at Documents/ai-portfolio/.env)
+.env
+*.pdf
+__pycache__/
