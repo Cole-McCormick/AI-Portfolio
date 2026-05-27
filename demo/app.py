@@ -38,33 +38,109 @@ st.set_page_config(
 # ── Global CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-[data-testid="stAppViewContainer"] { background: #f8fafc; }
-[data-testid="stHeader"]           { background: transparent; }
-[data-testid="stMainBlockContainer"] { padding-top: 1.5rem; }
+[data-testid="stAppViewContainer"]    { background: #f1f5f9; }
+[data-testid="stHeader"]              { background: transparent; }
+[data-testid="stMainBlockContainer"]  { padding-top: 1.5rem; }
 
+/* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
-    background: linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%);
-    color: white; border-radius: 16px; padding: 48px 44px; margin-bottom: 28px;
+    background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 55%, #7c3aed 100%);
+    color: white; border-radius: 18px; padding: 52px 48px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
 }
-.hero h1 { font-size: 3rem; font-weight: 800; margin: 0 0 10px; letter-spacing: -1px; }
-.hero p  { font-size: 1.1rem; opacity: .88; margin: 0; line-height: 1.6; }
+.hero::after {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: rgba(255,255,255,.05); pointer-events: none;
+}
+.hero h1 {
+    font-size: 3.4rem; font-weight: 800; margin: 0 0 12px;
+    letter-spacing: -2px; line-height: 1.05;
+}
+.hero .tagline { font-size: 1.05rem; opacity: .85; margin: 0 0 22px; line-height: 1.65; }
+.hero .pill {
+    display: inline-block; background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.28); border-radius: 99px;
+    padding: 4px 13px; font-size: .78rem; margin-right: 7px; margin-bottom: 5px;
+}
+.hero-stat {
+    background: rgba(255,255,255,.12); border-radius: 12px;
+    padding: 16px; text-align: center;
+}
+.hero-stat .num { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+.hero-stat .lbl { font-size: .73rem; opacity: .78; margin-top: 4px; }
 
+/* ── Feature cards ────────────────────────────────────────────────── */
 .feature-card {
-    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
-    padding: 22px; height: 100%;
+    background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 24px; height: 100%;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    transition: box-shadow .15s, transform .15s;
 }
-.feature-card .icon { font-size: 1.6rem; margin-bottom: 10px; }
-.feature-card h3    { font-size: 1rem; font-weight: 700; margin: 0 0 6px; color: #1e293b; }
-.feature-card p     { font-size: .85rem; color: #64748b; margin: 0; line-height: 1.6; }
+.feature-card:hover {
+    box-shadow: 0 8px 24px rgba(79,70,229,.12);
+    transform: translateY(-2px);
+}
+.feature-card .fc-icon  { font-size: 1.75rem; margin-bottom: 12px; }
+.feature-card .fc-title { font-size: 1rem; font-weight: 700; margin-bottom: 7px; color: #1e293b; }
+.feature-card .fc-desc  { font-size: .84rem; color: #64748b; line-height: 1.65; }
 
-.roi-box {
-    background: #eff6ff; border: 1px solid #bfdbfe;
-    border-radius: 12px; padding: 24px 28px;
+/* ── ROI ──────────────────────────────────────────────────────────── */
+.roi-result-box {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white; border-radius: 14px; padding: 28px 22px; text-align: center;
+    box-shadow: 0 4px 16px rgba(79,70,229,.25);
+}
+.roi-result-box .big-num { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+.roi-result-box .sub     { font-size: .85rem; opacity: .82; margin-top: 6px; }
+
+.roi-breakdown {
+    width: 100%; border-collapse: collapse;
+    border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;
+}
+.roi-breakdown thead th {
+    padding: 10px 14px; font-size: .74rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 2px solid #e2e8f0;
+}
+.roi-breakdown th.col-left   { background: #f8fafc; color: #94a3b8; text-align: left; }
+.roi-breakdown th.col-manual { background: #fff1f2; color: #be123c; text-align: right; }
+.roi-breakdown th.col-ai     { background: #f0fdf4; color: #15803d; text-align: right; }
+.roi-breakdown td {
+    padding: 10px 14px; font-size: .88rem; color: #374151;
+    border-bottom: 1px solid #f1f5f9; background: white;
+}
+.roi-breakdown td.col-manual {
+    background: #fff8f8; color: #b91c1c; text-align: right;
+}
+.roi-breakdown td.col-ai {
+    background: #f8fff9; color: #15803d; font-weight: 600; text-align: right;
+}
+.roi-breakdown tr:last-child td { border-bottom: none; font-weight: 700; font-size: .92rem; }
+.roi-note {
+    font-size: .75rem; color: #94a3b8; margin-top: 7px; font-style: italic;
+    padding-left: 4px;
 }
 
+/* ── Steps ────────────────────────────────────────────────────────── */
+.step-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 13px;
+    padding: 22px 16px; text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.step-num {
+    background: #4f46e5; color: white; border-radius: 50%;
+    width: 38px; height: 38px; line-height: 38px;
+    font-weight: 800; font-size: 1rem; margin: 0 auto 11px;
+}
+.step-title  { font-weight: 700; font-size: .92rem; margin-bottom: 6px; color: #1e293b; }
+.step-detail { font-size: .8rem; color: #64748b; line-height: 1.55; }
+
+/* ── Candidate cards ──────────────────────────────────────────────── */
 .cand-card {
-    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
-    padding: 14px 18px; margin-bottom: 10px;
+    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 .bar-bg   { background: #e5e7eb; border-radius: 4px; height: 6px; margin-top: 5px; }
 .bar-fill { height: 6px; border-radius: 4px; }
@@ -73,21 +149,26 @@ st.markdown("""
     font-size: .72rem; font-weight: 600;
 }
 
+/* ── Interview cards ──────────────────────────────────────────────── */
 .q-card {
     background: white; border: 1px solid #e2e8f0; border-radius: 12px;
     padding: 20px 24px; margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 .q-card h4 {
     color: #4f46e5; font-size: .75rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px;
+    text-transform: uppercase; letter-spacing: .06em; margin: 0 0 12px;
 }
-.q-item        { margin-bottom: 12px; }
-.q-item .q     { font-size: .95rem; font-weight: 600; color: #1e293b; margin-bottom: 3px; }
-.q-item .rat   { font-size: .82rem; color: #64748b; }
+.q-item       { margin-bottom: 13px; }
+.q-item .q    { font-size: .95rem; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
+.q-item .rat  { font-size: .82rem; color: #64748b; }
 
+/* ── JD Analyzer ──────────────────────────────────────────────────── */
 .dim-row {
-    background: white; border: 1px solid #e2e8f0; border-radius: 8px;
-    padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 14px;
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
 .section-lbl {
     font-size: .72rem; font-weight: 700; text-transform: uppercase;
@@ -147,32 +228,50 @@ def list_resume_files() -> list[Path]:
 # ── Tab: Home ─────────────────────────────────────────────────────────────────
 
 def tab_home():
+    # ── Hero ──────────────────────────────────────────────────────────────────
     st.markdown("""
     <div class="hero">
-      <h1>HireAI</h1>
-      <p>AI-powered hiring tools built for small and mid-size businesses.<br>
-         Screen faster. Interview smarter. Write better job postings.</p>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                  flex-wrap:wrap;gap:28px">
+        <div style="flex:1;min-width:260px">
+          <h1>HireAI</h1>
+          <p class="tagline">AI-powered hiring tools built for small and mid-size businesses.<br>
+             Screen faster. Interview smarter. Write better job postings.</p>
+          <div>
+            <span class="pill">✓ No sign-up required</span>
+            <span class="pill">✓ PDF, Word &amp; text</span>
+            <span class="pill">✓ Results in 60 seconds</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:230px">
+          <div class="hero-stat"><div class="num">60s</div><div class="lbl">to screen 50 resumes</div></div>
+          <div class="hero-stat"><div class="num">80%</div><div class="lbl">less screening time</div></div>
+          <div class="hero-stat"><div class="num">4</div><div class="lbl">tools, one platform</div></div>
+          <div class="hero-stat"><div class="num">$0</div><div class="lbl">to run this demo</div></div>
+        </div>
+      </div>
     </div>
     """, unsafe_allow_html=True)
 
+    # ── Feature cards ──────────────────────────────────────────────────────────
     c1, c2, c3, c4 = st.columns(4)
-    for col, icon, title, desc in zip(
-        [c1, c2, c3, c4],
-        ["📋", "💬", "📊", "🔍"],
-        ["Resume Screener", "Interview Questions", "Scoring Dashboard", "JD Analyzer"],
-        [
-            "Score and rank every applicant against your job description in under 60 seconds. Stop reading 50 resumes manually.",
-            "Generate tailored interview questions from each candidate's actual resume — not a generic template.",
-            "Side-by-side candidate comparison with color-coded tiers. Exportable HTML report for your hiring team.",
-            "Grade your job posting on bias, clarity, inclusivity, and appeal — then get a rewritten version ready to post.",
-        ],
-    ):
+    cards = [
+        ("📋", "#4f46e5", "Resume Screener",
+         "Score and rank every applicant against your job description in under 60 seconds. Stop reading 50 resumes manually."),
+        ("💬", "#7c3aed", "Interview Questions",
+         "Generate tailored interview questions from each candidate's actual resume — not a generic template."),
+        ("📊", "#2563eb", "Scoring Dashboard",
+         "Side-by-side candidate comparison with color-coded tiers. Shareable HTML report for your hiring team."),
+        ("🔍", "#0891b2", "JD Analyzer",
+         "Grade your job posting on bias, clarity, and appeal — then get a rewritten version ready to post today."),
+    ]
+    for col, (icon, accent, title, desc) in zip([c1, c2, c3, c4], cards):
         with col:
             st.markdown(f"""
-            <div class="feature-card">
-              <div class="icon">{icon}</div>
-              <h3>{title}</h3>
-              <p>{desc}</p>
+            <div class="feature-card" style="border-top:4px solid {accent}">
+              <div class="fc-icon">{icon}</div>
+              <div class="fc-title">{title}</div>
+              <div class="fc-desc">{desc}</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -180,32 +279,86 @@ def tab_home():
 
     # ── ROI Calculator ────────────────────────────────────────────────────────
     st.markdown("### 💰 ROI Calculator")
-    st.caption("See how much time and money HireAI saves your team each year.")
+    st.caption("Adjust the sliders to match your hiring volume — the table below shows exactly how the savings are calculated.")
 
-    col_sliders, col_result = st.columns([2, 1])
+    col_sliders, col_result = st.columns([3, 2])
     with col_sliders:
-        hires = st.slider("Annual hires", 1, 150, 25)
-        apps  = st.slider("Average applicants per role", 10, 300, 60)
-        rate  = st.slider("HR hourly rate ($)", 18, 80, 28)
+        hires = st.slider("Annual hires", 1, 150, 25, key="roi_hires")
+        apps  = st.slider("Average applicants per role", 10, 300, 60, key="roi_apps")
+        rate  = st.slider("HR hourly rate ($)", 18, 80, 28, key="roi_rate")
 
-    total_resumes  = hires * apps
-    hours_manual   = total_resumes * 0.25      # ~15 min per resume
-    hours_with_ai  = total_resumes * 0.05      # ~3 min reviewing ranked list
-    hours_saved    = hours_manual - hours_with_ai
-    dollars_saved  = int(hours_saved * rate)
+    # Calculation
+    mins_manual   = 15           # minutes a person spends reading one resume
+    mins_ai       = 3            # minutes reviewing AI-ranked results per resume
+    total_resumes = hires * apps
+    hours_manual  = round(total_resumes * mins_manual / 60, 1)
+    hours_ai      = round(total_resumes * mins_ai / 60, 1)
+    hours_saved   = round(hours_manual - hours_ai, 1)
+    cost_manual   = int(hours_manual * rate)
+    cost_ai       = int(hours_ai * rate)
+    dollars_saved = cost_manual - cost_ai
 
     with col_result:
         st.markdown(f"""
-        <div class="roi-box">
-          <div style="font-size:.72rem;color:#64748b;text-transform:uppercase;
-                      letter-spacing:.05em;margin-bottom:10px">Your Annual Numbers</div>
-          <div style="font-size:.95rem;margin-bottom:5px">📄 <b>{total_resumes:,}</b> resumes to screen</div>
-          <div style="font-size:.95rem;margin-bottom:5px">⏱ <b>{hours_manual:.0f} hrs</b> spent manually</div>
-          <div style="font-size:.95rem;margin-bottom:14px">⚡ <b>{hours_with_ai:.0f} hrs</b> with HireAI</div>
-          <div style="font-size:1.8rem;font-weight:800;color:#4f46e5">${dollars_saved:,}/yr saved</div>
-          <div style="font-size:.78rem;color:#64748b;margin-top:3px">{hours_saved:.0f} hours back to your team</div>
+        <div class="roi-result-box">
+          <div style="font-size:.72rem;opacity:.72;text-transform:uppercase;
+                      letter-spacing:.07em;margin-bottom:8px">Estimated Annual Savings</div>
+          <div class="big-num">${dollars_saved:,}</div>
+          <div class="sub">{hours_saved:,.0f} hours returned to your team each year</div>
         </div>
         """, unsafe_allow_html=True)
+
+    # ── Calculation breakdown ─────────────────────────────────────────────────
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("**How we calculate this:**")
+    st.markdown(f"""
+    <table class="roi-breakdown">
+      <thead>
+        <tr>
+          <th class="col-left"></th>
+          <th class="col-manual">❌ Without HireAI</th>
+          <th class="col-ai">✅ With HireAI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Total resumes to screen
+            <div style="font-size:.75rem;color:#94a3b8;margin-top:2px">
+              {hires} hires × {apps} applicants per role
+            </div>
+          </td>
+          <td class="col-manual">{total_resumes:,} resumes</td>
+          <td class="col-ai">{total_resumes:,} resumes</td>
+        </tr>
+        <tr>
+          <td>Time spent per resume</td>
+          <td class="col-manual">~{mins_manual} min reading each one</td>
+          <td class="col-ai">~{mins_ai} min reviewing rankings ★</td>
+        </tr>
+        <tr>
+          <td>Total screening hours</td>
+          <td class="col-manual">{hours_manual:,} hours</td>
+          <td class="col-ai">{hours_ai:,} hours</td>
+        </tr>
+        <tr>
+          <td>HR cost at ${rate}/hr</td>
+          <td class="col-manual">${cost_manual:,}</td>
+          <td class="col-ai">${cost_ai:,}</td>
+        </tr>
+        <tr>
+          <td>Annual savings</td>
+          <td class="col-manual">—</td>
+          <td class="col-ai">${dollars_saved:,} &nbsp;/&nbsp; {hours_saved:,.0f} hrs</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="roi-note">
+      ★ With HireAI, the AI reads and scores every resume automatically.
+      You only spend time reviewing the top-ranked candidates and their explanations
+      — roughly 3 minutes of review instead of 15 minutes of reading.
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -213,30 +366,27 @@ def tab_home():
     st.markdown("### How it works")
     s1, s2, s3, s4 = st.columns(4)
     for col, num, step, detail in zip(
-        [s1, s2, s3, s4],
-        ["1", "2", "3", "4"],
-        ["Upload your JD", "Add resumes", "Get ranked results", "Interview top candidates"],
+        [s1, s2, s3, s4], ["1", "2", "3", "4"],
+        ["Paste your JD", "Add resumes", "Get ranked results", "Interview smarter"],
         [
-            "Paste or upload the job description you're hiring for.",
-            "Drop in PDF, Word, or text resume files — any format.",
-            "Claude scores every candidate 0–100. Ranked list in seconds.",
-            "Open tailored interview questions for each candidate you advance.",
+            "Upload the job description you're hiring for — paste it in or type it out.",
+            "Add resume files in any format: PDF, Word, or plain text. Any number.",
+            "Claude scores every applicant 0–100 with a plain-English explanation of each score.",
+            "Get tailored interview questions built from each candidate's actual resume.",
         ],
     ):
         with col:
             st.markdown(f"""
-            <div style="text-align:center;padding:16px 8px">
-              <div style="background:#4f46e5;color:white;border-radius:50%;width:36px;height:36px;
-                          line-height:36px;font-weight:800;font-size:1.1rem;
-                          margin:0 auto 10px">{num}</div>
-              <div style="font-weight:700;font-size:.9rem;margin-bottom:5px">{step}</div>
-              <div style="font-size:.8rem;color:#64748b;line-height:1.5">{detail}</div>
+            <div class="step-card">
+              <div class="step-num">{num}</div>
+              <div class="step-title">{step}</div>
+              <div class="step-detail">{detail}</div>
             </div>
             """, unsafe_allow_html=True)
 
     if not api_available():
         st.markdown("<br>", unsafe_allow_html=True)
-        st.info("**Demo mode:** sample data is pre-loaded in each tab. Set `ANTHROPIC_API_KEY` in your environment to run live AI analysis.")
+        st.info("**Demo mode:** pre-loaded sample data is shown in each tab. Set `ANTHROPIC_API_KEY` to run live AI analysis.")
 
 
 # ── Tab: Resume Screener ──────────────────────────────────────────────────────
