@@ -72,23 +72,31 @@ For each dimension provide:
   - summary    (1-2 sentence verdict, 50 words max)
   - issues     (list of 1-4 specific problems found; empty list if none)
   - suggestions (list of 1-4 concrete, actionable fixes; empty list if no issues)
+  - rewrites   (list of 0-2 objects, each with "original" and "replacement" keys;
+                "original" is a verbatim quote of the problematic phrase from the JD,
+                "replacement" is the improved text to use instead;
+                omit entirely if no direct text substitution applies)
 
 Also provide:
-  - overall_grade  (letter: A / B / C / D / F)
+  - overall_grade   (letter: A / B / C / D / F)
   - overall_summary (2-3 sentence overall assessment, 80 words max)
   - top_strengths   (list of up to 3 things done well)
   - top_priorities  (list of up to 3 highest-impact improvements)
+  - rewritten_jd    (a complete improved version of the job description with ALL issues
+                    addressed; preserve the original structure and approximate length;
+                    this is the version the employer could post today)
 
 JSON schema:
 {
-  "bias":        { "score": int, "summary": str, "issues": [str], "suggestions": [str] },
-  "clarity":     { "score": int, "summary": str, "issues": [str], "suggestions": [str] },
-  "inclusivity": { "score": int, "summary": str, "issues": [str], "suggestions": [str] },
-  "appeal":      { "score": int, "summary": str, "issues": [str], "suggestions": [str] },
-  "overall_grade": str,
+  "bias":        { "score": int, "summary": str, "issues": [str], "suggestions": [str], "rewrites": [{"original": str, "replacement": str}] },
+  "clarity":     { "score": int, "summary": str, "issues": [str], "suggestions": [str], "rewrites": [{"original": str, "replacement": str}] },
+  "inclusivity": { "score": int, "summary": str, "issues": [str], "suggestions": [str], "rewrites": [{"original": str, "replacement": str}] },
+  "appeal":      { "score": int, "summary": str, "issues": [str], "suggestions": [str], "rewrites": [{"original": str, "replacement": str}] },
+  "overall_grade":   str,
   "overall_summary": str,
   "top_strengths":   [str],
-  "top_priorities":  [str]
+  "top_priorities":  [str],
+  "rewritten_jd":    str
 }
 
 Job Description:
@@ -108,7 +116,7 @@ def analyze_jd(client: anthropic.Anthropic, jd_text: str, max_retries: int = 3) 
     for attempt in range(1, max_retries + 1):
         with client.messages.stream(
             model="claude-opus-4-6",
-            max_tokens=2048,
+            max_tokens=4096,
             thinking={"type": "adaptive"},
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": prompt}],
@@ -342,6 +350,56 @@ def bullet_list(items: list, prefix: str, color_hex: str, styles: dict) -> list:
             )
         )
     return result
+
+
+def rewrite_pair_table(rewrites: list) -> list:
+    """Before/after comparison tables for each rewrite pair."""
+    if not rewrites:
+        return []
+    from reportlab.lib.colors import HexColor as HC
+    label_style = ParagraphStyle(
+        "rw_lbl", fontSize=7, fontName="Helvetica-Bold", leading=10,
+    )
+    before_style = ParagraphStyle(
+        "rw_bef", fontSize=8, fontName="Helvetica-Oblique",
+        textColor=HC("#9b1c1c"), leading=12,
+    )
+    after_style = ParagraphStyle(
+        "rw_aft", fontSize=8, fontName="Helvetica",
+        textColor=HC("#166534"), leading=12,
+    )
+    elements = [Paragraph("SUGGESTED REWRITES", ParagraphStyle(
+        "rw_hdr", fontSize=8, fontName="Helvetica-Bold",
+        textColor=HC("#6e7781"), spaceAfter=3,
+    ))]
+    for rw in rewrites:
+        tbl = Table(
+            [
+                [
+                    Paragraph('<font color="#9b1c1c">BEFORE</font>', label_style),
+                    Paragraph('<font color="#166534">AFTER</font>',  label_style),
+                ],
+                [
+                    Paragraph(f'"{rw.get("original", "")}"', before_style),
+                    Paragraph(rw.get("replacement", ""),     after_style),
+                ],
+            ],
+            colWidths=[3.05 * inch, 3.05 * inch],
+        )
+        tbl.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (0, -1), HC("#fff5f5")),
+            ("BACKGROUND",    (1, 0), (1, -1), HC("#f0fdf4")),
+            ("TOPPADDING",    (0, 0), (-1, -1), 5),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+            ("BOX",           (0, 0), (-1, -1), 0.5, HC("#e2e8f0")),
+            ("LINEAFTER",     (0, 0), (0,  -1), 0.5, HC("#e2e8f0")),
+            ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+        ]))
+        elements.append(tbl)
+        elements.append(Spacer(1, 4))
+    return elements
 
 
 # ─────────────────────────────────────────────────────────────
@@ -635,8 +693,9 @@ def build_jd_section(r: dict, styles: dict) -> list:
             ("LINEAFTER",     (0, 0), (0,  -1), 0.5, BORDER_GREY),
         ]))
 
-        issues_fl = bullet_list(d.get("issues", []),      "ISSUES FOUND", "#cf222e", styles)
-        sug_fl    = bullet_list(d.get("suggestions", []), "SUGGESTIONS",  "#0969da", styles)
+        issues_fl  = bullet_list(d.get("issues", []),      "ISSUES FOUND", "#cf222e", styles)
+        sug_fl     = bullet_list(d.get("suggestions", []), "SUGGESTIONS",  "#0969da", styles)
+        rewrite_fl = rewrite_pair_table(d.get("rewrites", []))
 
         if not issues_fl and not sug_fl:
             body = [Paragraph(
@@ -646,7 +705,43 @@ def build_jd_section(r: dict, styles: dict) -> list:
         else:
             body = issues_fl + sug_fl
 
-        elements.append(KeepTogether([dim_hdr] + body + [spacer(0.1)]))
+        elements.append(KeepTogether([dim_hdr] + body + rewrite_fl + [spacer(0.1)]))
+
+    # ── Full suggested rewrite ────────────────────────────────
+    rewritten = a.get("rewritten_jd", "").strip()
+    if rewritten:
+        from reportlab.lib.colors import HexColor as HC
+        elements.append(accent_header("Suggested Rewrite", accent_color=HC("#166534")))
+        elements.append(spacer(0.1))
+        intro = Paragraph(
+            "The following is a revised version of this job description with all identified "
+            "issues addressed. It is ready to post.",
+            ParagraphStyle("rw_intro", fontSize=9, fontName="Helvetica-Oblique",
+                           textColor=HC("#6e7781"), leading=13, spaceAfter=8),
+        )
+        body_style = ParagraphStyle(
+            "rw_body", fontSize=9, fontName="Helvetica",
+            textColor=BRAND_DARK, leading=14,
+        )
+        blocks = [b.strip() for b in rewritten.split("\n\n") if b.strip()]
+        rows = [
+            [Paragraph(b.replace("\n", "<br/>"), body_style)]
+            for b in blocks
+        ]
+        rewrite_box = Table(rows, colWidths=[6.5 * inch])
+        rewrite_box.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (-1, -1), HC("#f0fdf4")),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 14),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 14),
+            ("TOPPADDING",    (0, 0), (-1, -1), 5),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ("TOPPADDING",    (0, 0), (-1, 0),  12),
+            ("BOTTOMPADDING", (0, -1), (-1, -1), 12),
+            ("BOX",           (0, 0), (-1, -1), 0.8, HC("#86efac")),
+        ]))
+        elements.append(intro)
+        elements.append(rewrite_box)
+        elements.append(spacer(0.2))
 
     elements.append(PageBreak())
     return elements
