@@ -1,0 +1,90 @@
+{
+  "comparative": {
+    "executive_summary": "This is an unusually strong pool. Three near-perfect candidates with direct fintech payments experience, every required technical skill, and PCI-DSS backgrounds. Any of the top three would be a strong hire — the decision is a tiebreaker, not a compromise.",
+    "hire_recommendation": "Alice Chen is the hire. She has the deepest combination of fintech domain experience and technical ownership — 8 years in high-throughput payments, direct Stripe/Plaid/ACH integration ownership, PCI-DSS compliance leadership, and a public open-source track record that signals technical depth beyond her resume. Her only gap (AWS vs. GCP) is explicitly acceptable in the JD. Grace Kim is nearly identical and should be your backup offer if Alice declines — do not let her go cold. Frank Nguyen's Staff Engineer background is an asset technically, but the title step-down requires a direct conversation before extending an offer.",
+    "comparisons": [
+      {
+        "name": "Alice Chen",
+        "unique_value": "Open-source Python maintainership combined with the strongest mentorship track record of the three — signals she will raise the technical bar for junior engineers, not just perform well individually.",
+        "biggest_risk": "AWS-primary background may create a ramp-up period if the team's GCP investment is significant. The JD explicitly accepts either, so this is low risk — but worth clarifying in the technical screen."
+      },
+      {
+        "name": "Grace Kim",
+        "unique_value": "8M events/day throughput experience exceeds the JD's stated scale requirements — she has already solved scaling problems the team may not have hit yet, and brings that headroom on day one.",
+        "biggest_risk": "Similar profile to Alice creates offer-sequencing risk. If both accept, you have duplicated strengths and no gap-filling. Stagger offers or adjust scope to differentiate the roles."
+      },
+      {
+        "name": "Frank Nguyen",
+        "unique_value": "9+ years at Staff Engineer level means he can independently own architecture decisions with minimal management overhead — the highest ceiling for autonomous technical contribution of the three.",
+        "biggest_risk": "Staff-to-Senior is a deliberate title step-down. The motivation behind that decision must be understood before committing — 'I needed to leave somewhere' is a different hire than 'I want to build here.'"
+      }
+    ],
+    "interview_sequence": "Interview Alice first — she sets the benchmark. Grace second as your backup; don't let the process go cold. Frank third; his interview should open with a direct conversation about the title step-down before any technical assessment."
+  },
+  "memos": {
+    "Alice Chen": {
+      "hiring_brief": "Alice Chen is a textbook fit for this role. Eight years of Python in high-throughput fintech — not adjacent experience, not transferable skills, but the exact work: Stripe and Plaid integrations, PCI-DSS compliance ownership, async microservices at scale processing billions in transactions. She has done this job. Her current stack (FastAPI, asyncio, PostgreSQL, Kubernetes, Kafka) maps to every line of the job description without translation required. The open-source Python maintainership is a meaningful differentiator — it's a signal of technical depth and community engagement that almost no other candidate can show.\n\nThe only honest concern is compensation positioning. An 8-year fintech engineer with her profile is likely expecting somewhere in the $125–145k range. The posted range ($160–195k) actually works in your favor here — but if you're trying to close her below $150k, expect friction. Clarify the budget ceiling before you go deep in the process, not after.\n\nMove her forward immediately. She is the candidate you benchmark everyone else against.",
+      "strengths": [
+        "Direct Stripe/Plaid/ACH integration ownership in production — not exposure, she built and maintained these integrations at scale",
+        "PCI-DSS compliance leadership at her current company — rare hands-on compliance experience that is explicitly required for this role",
+        "Open-source Python maintainership — signals technical depth and community reputation that reflects well on the team",
+        "Mentorship track record with junior engineers — the JD explicitly calls this out as required",
+        "8 years pure fintech experience — zero domain translation required, she understands payments constraints from day one"
+      ],
+      "concerns": [
+        "AWS-primary background may mean a GCP learning curve if the team leans that direction — the JD accepts either, but worth flagging early"
+      ],
+      "red_flags": [],
+      "salary_signal": "$125–145k estimated based on 8 years at high-growth fintech with senior ownership scope. The posted range ($160–195k) is above this estimate — she will likely negotiate toward $170–180k at midpoint.",
+      "key_question": "Tell me about the last time you had to push back on a product timeline because of PCI-DSS compliance requirements — what was the constraint, and how did you resolve the tension with the product team?",
+      "recommendation": "Strong Advance",
+      "rejection_email": "Hi Alice,\n\nThank you for applying for our Senior Python Developer role. We were genuinely impressed by your compliance systems work — PCI-DSS ownership at that scale isn't a common background in our candidate pool.\n\nAfter reviewing the full group of applicants, we've decided to move forward with a candidate whose experience maps more closely to a specific technical direction we're prioritizing right now. This was a close decision.\n\nWe'd like to stay in touch — your fintech background is exactly what we look for, and we expect to be hiring again later this year.\n\nBest,\n[Your name]",
+      "interview_invite": "Hi Alice,\n\nWe reviewed your application for our Senior Python Developer role and wanted to reach out right away — your background is a strong match. The combination of PCI-DSS ownership and the scale you've operated at is exactly what we're looking for.\n\nWe'd love to set up a 45-minute technical conversation with our engineering lead to learn more about your work. You can grab time directly here: [SCHEDULING LINK]\n\nLooking forward to connecting.\n\n[Your name]"
+    },
+    "Grace Kim": {
+      "hiring_brief": "Grace Kim is nearly indistinguishable from the top of this pool on paper, and that is a strong statement. Seven years of fintech, 8M events/day throughput, PCI-DSS Level 1 ownership, and every required technical skill checked without gaps. Her background at a payments-focused company means she has already solved the hard distributed systems problems this role will ask her to solve again — she brings proven headroom, not just theoretical knowledge.\n\nOne thing worth probing in the first conversation: her throughput experience actually exceeds the JD's stated scale. There is a real risk she underestimates the role's complexity going in, or worse, finds it unchallenging once she's in. Ask her directly what she's hoping to learn or build in this role — the answer will tell you whether she's energized by the work or just making a safe career move.\n\nAdvance her alongside Alice Chen. If you can only make one offer, Alice's open-source track record and mentorship depth are the tiebreaker. But Grace is a legitimate first choice and would excel here.",
+      "strengths": [
+        "8M events/day throughput experience — exceeds the JD's stated scale, bringing headroom and proven operational depth",
+        "PCI-DSS Level 1 certification ownership — higher compliance bar than most candidates carry",
+        "7 years fintech-specific — every year of experience is domain-relevant, no generalist time diluting her background",
+        "Full-stack Kafka and Stripe/Plaid integration depth — matches the exact technical environment described",
+        "Strong mentorship track record — explicitly required in the JD, explicitly present in her background"
+      ],
+      "concerns": [
+        "Scale experience at her current company may make this role feel like a step back in technical challenge — needs probing in first conversation",
+        "Nearly identical profile to Alice Chen creates offer-sequencing risk if both are advanced simultaneously"
+      ],
+      "red_flags": [],
+      "salary_signal": "$120–140k estimated based on 7 years at a dedicated payments company with senior scope. Similar to Alice; expect negotiation toward $170–185k given the posted range.",
+      "key_question": "You've operated systems at 8M events/day — our current scale is lower than that. What would you focus on in the first 90 days to move us toward that kind of throughput, and what would you do differently than you did at your current company?",
+      "recommendation": "Strong Advance",
+      "rejection_email": "Hi Grace,\n\nThank you for applying for our Senior Python Developer role. Your payments infrastructure background stood out immediately — particularly the PCI-DSS Level 1 ownership and the throughput scale you've operated at.\n\nWe moved forward with another candidate after a genuinely close decision. This was competitive.\n\nI'd like to keep your information on file — your profile is exactly what we look for as we grow the team, and we'll be hiring again later this year.\n\nBest,\n[Your name]",
+      "interview_invite": "Hi Grace,\n\nThank you for applying to our Senior Python Developer opening. Your payments infrastructure experience — particularly the throughput scale and PCI-DSS Level 1 work — caught our attention right away.\n\nWe'd love to connect for a technical conversation. Please find a time that works here: [SCHEDULING LINK]\n\nLooking forward to it.\n\n[Your name]"
+    },
+    "Frank Nguyen": {
+      "hiring_brief": "Frank Nguyen has the deepest individual technical profile in this pool. Nine-plus years, Staff Engineer title, gRPC implementation experience (almost no other candidate has this), Kafka ownership, and PCI-DSS recertification leadership. On paper, he is overqualified for a Senior Engineer role — and that is both an asset and a risk that must be resolved before you go deep in the process.\n\nThe critical question is motivation. A Staff Engineer applying for a Senior role is making a deliberate title step-down. That can mean several things: he is leaving a dysfunctional environment and wants solid, stable work; he is prioritizing compensation range over title; or his current company is struggling and he needs to move. Each of those is acceptable — but you need to know which it is. A candidate who is running toward something builds differently than one who is running away from something.\n\nIf his motivation is genuine and his expectations about autonomy match what a Senior IC role offers here, he is your strongest technical hire. Run the motivation conversation first. If it holds up, advance him immediately.",
+      "strengths": [
+        "9+ years at Staff Engineer depth — will independently own architecture decisions without management overhead",
+        "gRPC expertise — rare skill explicitly listed as nice-to-have; virtually no other candidate in this pool has it",
+        "6M transactions/day Kafka ownership — operational experience at message-queue scale with real production exposure",
+        "PCI-DSS recertification leadership — has run the full compliance cycle, not just maintained an existing certification",
+        "GitHub Actions CI/CD ownership depth — strong DevOps capability alongside engineering"
+      ],
+      "concerns": [
+        "Staff-to-Senior title step-down must be understood before advancing — do not proceed to technical screen without a direct conversation about motivation",
+        "May expect Staff-level autonomy and architectural decision-making authority that a Senior IC role may not formally provide"
+      ],
+      "red_flags": [
+        {
+          "flag": "Title Step-Down",
+          "detail": "Currently holds Staff Engineer title but is applying for a Senior Engineer role. Not disqualifying, but requires direct probing: 'Why are you comfortable with the title step-down, and what does the scope of this role offer that your current position doesn't?' Ask this early — the answer determines whether to continue."
+        }
+      ],
+      "salary_signal": "$135–155k estimated based on Staff Engineer tenure and technical depth. The posted range ($160–195k) likely works, but he may anchor toward the upper end given his current level.",
+      "key_question": "You're currently a Staff Engineer — walk me through why this Senior Engineer role is the right move for you right now, and what would success look like for you 12 months in?",
+      "recommendation": "Advance",
+      "rejection_email": "Hi Frank,\n\nThank you for applying for our Senior Python Developer role. Your gRPC experience and the Kafka systems work at your current company were genuinely impressive — that combination is rare in the candidate pool.\n\nWe've decided to move forward with candidates whose experience more directly matches our current technical direction. This was a close call.\n\nI'd welcome staying in touch — your depth is exactly what we look for as the team grows.\n\nBest,\n[Your name]",
+      "interview_invite": "Hi Frank,\n\nYour application for our Senior Python Developer role stood out immediately — particularly the gRPC implementation work and the scale of the systems you've owned. That combination is rare.\n\nWe'd love to set up a conversation to learn more about your background. Please find a time here: [SCHEDULING LINK]\n\nLooking forward to connecting.\n\n[Your name]"
+    }
+  }
+}

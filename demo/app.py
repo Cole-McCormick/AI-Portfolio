@@ -174,6 +174,90 @@ st.markdown("""
     font-size: .72rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: .06em; color: #94a3b8; margin-bottom: 10px;
 }
+
+/* ── Hiring Memos ─────────────────────────────────────────────────── */
+.compare-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    color: white; border-radius: 16px; padding: 28px; margin-bottom: 24px;
+}
+.compare-card h3 {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; opacity: .65; margin: 0 0 10px;
+}
+.hire-rec-box {
+    background: rgba(255,255,255,.12); border-radius: 10px;
+    padding: 16px 20px; font-size: .92rem; line-height: 1.75;
+    margin: 0 0 20px;
+}
+.compare-row {
+    background: rgba(255,255,255,.08); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 8px;
+    display: grid; grid-template-columns: 150px 1fr 1fr; gap: 16px; align-items: start;
+}
+.compare-row .cr-name { font-weight: 700; font-size: .9rem; }
+.compare-row .cr-lbl  { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; opacity: .55; margin-bottom: 3px; }
+.compare-row .cr-val  { font-size: .84rem; opacity: .9; line-height: 1.55; }
+.compare-seq {
+    background: rgba(255,255,255,.08); border-radius: 10px;
+    padding: 14px 18px; font-size: .85rem; line-height: 1.65; opacity: .88;
+    margin-top: 4px;
+}
+
+.memo-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+    padding: 28px; margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.memo-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.memo-header .mh-rank { font-size: 1.5rem; font-weight: 800; color: #94a3b8; min-width: 28px; }
+.memo-header .mh-name { font-size: 1.1rem; font-weight: 800; color: #1e293b; }
+.memo-header .mh-score { font-size: .82rem; color: #64748b; }
+.rec-badge {
+    display: inline-flex; align-items: center;
+    padding: 4px 12px; border-radius: 99px;
+    font-size: .75rem; font-weight: 700; letter-spacing: .03em; margin-left: auto;
+}
+.memo-brief {
+    font-size: .9rem; color: #374151; line-height: 1.8;
+    background: #f8fafc; border-left: 3px solid #4f46e5;
+    padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px;
+}
+.memo-brief p { margin: 0 0 14px; }
+.memo-brief p:last-child { margin: 0; }
+.list-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: .875rem; color: #374151; line-height: 1.55; margin-bottom: 9px;
+}
+.list-dot-green { color: #16a34a; font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+.list-dot-amber { color: #d97706; font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+.red-flag-card {
+    background: #fff5f5; border: 1px solid #fecaca; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 8px;
+}
+.red-flag-card .rf-title { font-size: .78rem; font-weight: 700; color: #dc2626; margin-bottom: 4px; }
+.red-flag-card .rf-detail { font-size: .84rem; color: #7f1d1d; line-height: 1.55; }
+.salary-box {
+    background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px;
+    padding: 14px 18px; font-size: .875rem; color: #0c4a6e; line-height: 1.6;
+}
+.salary-box .sb-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: #0284c7; margin-bottom: 4px; }
+.key-q-box {
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+    padding: 14px 18px; font-size: .875rem; color: #78350f;
+    font-style: italic; line-height: 1.65;
+}
+.key-q-box .kq-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: #d97706; font-style: normal; margin-bottom: 4px; }
+.email-box {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 16px 20px; font-size: .83rem; color: #374151;
+    white-space: pre-wrap; font-family: inherit; line-height: 1.7;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -217,6 +301,13 @@ def load_sample_results():
 def load_sample_jd() -> str:
     p = ROOT / "sample_job.txt"
     return p.read_text(encoding="utf-8").strip() if p.exists() else ""
+
+
+@st.cache_data
+def load_sample_memos() -> dict:
+    import json
+    p = ROOT / "sample_memos.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
 
 
 @st.cache_data
@@ -745,6 +836,222 @@ def tab_jd_analyzer():
         )
 
 
+# ── Tab: Hiring Memos ─────────────────────────────────────────────────────────
+
+def tab_hiring_memos():
+    import html as _html
+
+    def esc(s: str) -> str:
+        return _html.escape(str(s))
+
+    def brief_html(text: str) -> str:
+        paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+        if not paragraphs:
+            paragraphs = [text.strip()]
+        return "".join(f"<p>{esc(p)}</p>" for p in paragraphs)
+
+    REC_COLORS = {
+        "Strong Advance": ("#dcfce7", "#16a34a"),
+        "Advance":        ("#dbeafe", "#1d4ed8"),
+        "Consider":       ("#fef3c7", "#d97706"),
+        "Pass":           ("#f3f4f6", "#6b7280"),
+    }
+
+    st.markdown("## 🗂️ Hiring Memos")
+    st.caption(
+        "Per-candidate hiring briefs written by a senior recruiter — "
+        "strengths, red flags, salary signals, and a head-to-head comparison ready for your leadership meeting."
+    )
+
+    results = st.session_state.get("live_results") or load_sample_results()
+    if not results:
+        st.info("Run the Resume Screener first to generate candidate results.")
+        return
+
+    sample_data = load_sample_memos()
+
+    if api_available():
+        with st.expander("Generate Live Memos", expanded=False):
+            top_n = st.selectbox("Candidates to include", [3, 5, 10], key="memo_top_n",
+                                 help="Generates memos for the top N candidates by score")
+            if st.button("Generate Hiring Memos", type="primary", key="run_memos"):
+                from hiring_memo import generate_candidate_memo, generate_comparative_analysis
+                from screener import load_resume
+                client = get_client()
+                jd_text = load_sample_jd()
+
+                sorted_results = sorted(results, key=lambda r: r["score"], reverse=True)[:top_n]
+                prog = st.progress(0, text="Starting…")
+                memos: dict = {}
+                comp_candidates = []
+
+                for i, r in enumerate(sorted_results):
+                    prog.progress((i + 0.5) / (top_n + 1), text=f"Writing memo for {r['name']}…")
+                    try:
+                        resume_text = load_resume(Path(r["file"]))
+                        memo = generate_candidate_memo(
+                            client, jd_text, resume_text,
+                            r["name"], r["score"], r["explanation"]
+                        )
+                        memos[r["name"]] = memo
+                        comp_candidates.append({
+                            "name": r["name"], "score": r["score"],
+                            "explanation": r["explanation"], "resume_text": resume_text,
+                        })
+                    except Exception as exc:
+                        st.warning(f"Could not generate memo for {r['name']}: {exc}")
+
+                prog.progress((top_n) / (top_n + 1), text="Writing comparative analysis…")
+                try:
+                    comparative = generate_comparative_analysis(client, jd_text, comp_candidates[:3])
+                    st.session_state["comparative_data"] = comparative
+                except Exception as exc:
+                    st.warning(f"Comparative analysis failed: {exc}")
+
+                prog.progress(1.0)
+                prog.empty()
+                st.session_state["memos_data"] = memos
+                st.rerun()
+    else:
+        st.caption("Showing pre-loaded sample memos. Set `ANTHROPIC_API_KEY` to generate live memos.")
+
+    memos_data     = st.session_state.get("memos_data") or sample_data.get("memos", {})
+    comparative    = st.session_state.get("comparative_data") or sample_data.get("comparative")
+
+    if not memos_data:
+        st.info("No memo data available. Set `ANTHROPIC_API_KEY` and click Generate.")
+        return
+
+    # ── Comparative Analysis ──────────────────────────────────────────────────
+    if comparative:
+        comp_rows_html = "".join(
+            f"""<div class="compare-row">
+                  <div class="cr-name">{esc(c['name'])}</div>
+                  <div><div class="cr-lbl">Unique Value</div>
+                       <div class="cr-val">{esc(c['unique_value'])}</div></div>
+                  <div><div class="cr-lbl">Biggest Risk</div>
+                       <div class="cr-val">{esc(c['biggest_risk'])}</div></div>
+                </div>"""
+            for c in comparative.get("comparisons", [])
+        )
+        st.markdown(f"""
+        <div class="compare-card">
+          <h3>Comparative Analysis — Top Candidates</h3>
+          <div style="font-size:.88rem;opacity:.82;line-height:1.65;margin-bottom:16px">
+            {esc(comparative.get('executive_summary', ''))}
+          </div>
+          <h3>Hire Recommendation</h3>
+          <div class="hire-rec-box">{esc(comparative.get('hire_recommendation', ''))}</div>
+          <h3>Head-to-Head</h3>
+          {comp_rows_html}
+          <div style="margin-top:14px">
+            <h3>Interview Sequence</h3>
+            <div class="compare-seq">{esc(comparative.get('interview_sequence', ''))}</div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ── Per-Candidate Memos ───────────────────────────────────────────────────
+    sorted_results = sorted(results, key=lambda r: r["score"], reverse=True)
+
+    for rank, r in enumerate(sorted_results, 1):
+        name = r["name"]
+        if name not in memos_data:
+            continue
+
+        memo  = memos_data[name]
+        score = r["score"]
+        rec   = memo.get("recommendation", "Consider")
+        bg, fg = REC_COLORS.get(rec, ("#f3f4f6", "#6b7280"))
+        _, s_col, _ = tier_info(score)
+        bc = bar_color(score)
+
+        strengths = memo.get("strengths", [])
+        concerns  = memo.get("concerns", [])
+        red_flags = memo.get("red_flags", [])
+
+        strengths_html = "".join(
+            f'<div class="list-item"><span class="list-dot-green">●</span>{esc(s)}</div>'
+            for s in strengths
+        )
+        concerns_html = "".join(
+            f'<div class="list-item"><span class="list-dot-amber">●</span>{esc(c)}</div>'
+            for c in concerns
+        ) if concerns else '<div style="font-size:.84rem;color:#94a3b8;font-style:italic">None identified</div>'
+
+        red_flags_html = "".join(
+            f"""<div class="red-flag-card">
+                  <div class="rf-title">⚠ {esc(f['flag'])}</div>
+                  <div class="rf-detail">{esc(f['detail'])}</div>
+                </div>"""
+            for f in red_flags
+        )
+
+        st.markdown(f"""
+        <div class="memo-card">
+          <div class="memo-header">
+            <div class="mh-rank">#{rank}</div>
+            <div>
+              <div class="mh-name">{esc(name)}</div>
+              <div class="mh-score">{score}/100</div>
+            </div>
+            <span class="rec-badge" style="background:{bg};color:{fg}">{esc(rec)}</span>
+          </div>
+          <div class="memo-brief">{brief_html(memo.get('hiring_brief', ''))}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div>
+              <div class="section-lbl">Strengths</div>
+              {strengths_html}
+            </div>
+            <div>
+              <div class="section-lbl">Concerns</div>
+              {concerns_html}
+            </div>
+          </div>
+          {'<div class="section-lbl" style="color:#dc2626">Red Flags</div>' + red_flags_html if red_flags else ''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px">
+            <div>
+              <div class="salary-box">
+                <div class="sb-lbl">Salary Signal</div>
+                {esc(memo.get('salary_signal', ''))}
+              </div>
+            </div>
+            <div>
+              <div class="key-q-box">
+                <div class="kq-lbl">Key Question to Ask</div>
+                {esc(memo.get('key_question', ''))}
+              </div>
+            </div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        with st.expander(f"Email Drafts — {name}"):
+            e1, e2 = st.columns(2)
+            with e1:
+                st.markdown("**Interview Invite**")
+                st.markdown(f'<div class="email-box">{esc(memo.get("interview_invite", ""))}</div>',
+                            unsafe_allow_html=True)
+                st.download_button(
+                    "Copy Invite",
+                    data=memo.get("interview_invite", "").encode("utf-8"),
+                    file_name=f"invite_{name.lower().replace(' ', '_')}.txt",
+                    mime="text/plain",
+                    key=f"dl_invite_{rank}",
+                )
+            with e2:
+                st.markdown("**Rejection Email**")
+                st.markdown(f'<div class="email-box">{esc(memo.get("rejection_email", ""))}</div>',
+                            unsafe_allow_html=True)
+                st.download_button(
+                    "Copy Rejection",
+                    data=memo.get("rejection_email", "").encode("utf-8"),
+                    file_name=f"rejection_{name.lower().replace(' ', '_')}.txt",
+                    mime="text/plain",
+                    key=f"dl_reject_{rank}",
+                )
+
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
@@ -754,12 +1061,14 @@ def main():
         "💬 Interview Questions",
         "📊 Scoring Dashboard",
         "🔍 JD Analyzer",
+        "🗂️ Hiring Memos",
     ])
     with tabs[0]: tab_home()
     with tabs[1]: tab_screener()
     with tabs[2]: tab_interview()
     with tabs[3]: tab_dashboard()
     with tabs[4]: tab_jd_analyzer()
+    with tabs[5]: tab_hiring_memos()
 
 
 main()

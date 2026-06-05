@@ -1,0 +1,38 @@
+INTERVIEW GUIDE — Alice Chen
+Role: Senior Python Developer – Payments Platform
+
+[ASYNC PYTHON & HIGH-THROUGHPUT MICROSERVICES]
+  1. You architected FastAPI microservices handling 4M+ daily payment events at LendBridge. Walk us through how you designed the async concurrency model — specifically how you managed backpressure and avoided event loop blocking under peak load.
+     Rationale: Alice's resume highlights high-throughput async work, so this probes the depth of her architectural decisions rather than surface-level familiarity.
+  2. As the maintainer of async-pgpool, you've thought deeply about connection pooling for asyncpg. What were the hardest edge cases you had to solve, and how do those lessons influence how you design database access layers in production payment services?
+     Rationale: Her open-source ownership of async-pgpool is a unique signal worth exploring to assess both technical depth and how she translates library-level thinking into production system design.
+  3. At PayRoute you migrated a Django monolith to FastAPI microservices on GKE. What decomposition strategy did you use to identify service boundaries, and what would you do differently now?
+     Rationale: This targets a concrete project on her resume and probes architectural judgment and the ability to reflect critically — key for a senior role that will own similar decisions here.
+
+[PAYMENTS DOMAIN & THIRD-PARTY INTEGRATIONS]
+  1. You led the Stripe, Plaid, and ACH integrations at LendBridge and reduced settlement time by 40%. What were the specific bottlenecks you identified in the settlement flow, and how did you architect the solution to address them?
+     Rationale: The 40% settlement improvement is a standout claim on her resume, and understanding the mechanism tests whether she owns the outcome deeply or inherited it.
+  2. Your gRPC clearing service at PayRoute processed $500M/month in ACH transactions. ACH has strict file format, timing window, and return code requirements — how did you model error handling and retry logic for NACHA return codes in that system?
+     Rationale: This probes domain-specific ACH knowledge that goes beyond API wiring and is directly relevant to FinFlow's ACH network integrations.
+  3. Given your experience with both Stripe and ACH rails, how would you approach designing a unified payment abstraction layer that can route transactions across multiple providers while maintaining idempotency and avoiding double-charges?
+     Rationale: This forward-looking design question assesses whether Alice can apply her multi-provider integration experience to FinFlow's architecture needs at a senior level.
+
+[DATABASE PERFORMANCE & DATA INTEGRITY]
+  1. You cut P99 query latency from 320ms to 45ms on the PostgreSQL transaction ledger at LendBridge. Can you walk us through the specific diagnostics you ran, what you found, and the exact changes — index strategy, query rewrites, schema changes — that drove that improvement?
+     Rationale: This is the most quantifiable technical achievement on her resume and deserves rigorous unpacking to validate depth and confirm she personally drove the optimization.
+  2. Designing a ledger schema for financial transactions involves tricky tradeoffs around append-only patterns, balance consistency, and auditability. How did you structure the schema at LendBridge, and how did you enforce double-entry integrity at the application and database layers?
+     Rationale: Financial ledger correctness is critical at FinFlow, and this question tests whether Alice's schema design reflects fintech-grade rigor beyond standard CRUD modeling.
+
+[RELIABILITY, INCIDENT MANAGEMENT & ON-CALL]
+  1. As on-call rotation lead at PayRoute, you reduced MTTR from 45 minutes to 8 minutes. What specific changes — tooling, runbooks, alerting thresholds, team process — drove that reduction, and how did you sustain it as the system grew?
+     Rationale: MTTR improvement is claimed prominently but the resume doesn't detail the mechanism, so this tests whether she drove a systemic change or benefited from isolated improvements.
+  2. In a payments platform, a partial outage — say, Plaid webhooks are delayed but Stripe is healthy — can be harder to detect than a full outage. How have you approached designing observability and alerting for subtle degradation scenarios in your current or past systems?
+     Rationale: This targets a realistic FinFlow failure mode and assesses whether Alice's reliability thinking extends beyond uptime to nuanced payment-specific failure patterns she'd have encountered at LendBridge.
+
+[MENTORSHIP, LEADERSHIP & COMPLIANCE]
+  1. You championed the PCI-DSS SAQ-D certification at LendBridge, which is the most demanding self-assessment questionnaire. What were the most technically complex engineering controls you had to implement or retrofit, and how did you get engineering buy-in for the compliance work?
+     Rationale: SAQ-D is a significant compliance undertaking and FinFlow values PCI-DSS knowledge, so this tests both technical depth and Alice's ability to drive org-wide security initiatives.
+  2. You authored an internal async Python style guide and mentored four junior engineers. How do you tailor your mentorship approach when a junior engineer is struggling with a concept like async concurrency that is notoriously difficult to debug — what does a concrete coaching session look like?
+     Rationale: The role requires mentoring 2–3 junior engineers, and Alice's experience is directly relevant, but this question probes her pedagogical method rather than just the fact that she mentored.
+  3. As a staff-level engineer at LendBridge you were likely involved in technical roadmap decisions. How do you handle a situation where Product is pushing to ship a payment feature quickly but you've identified a design that could create PCI scope creep or data integrity risk?
+     Rationale: This scenario-based question assesses whether Alice can exercise senior technical judgment and hold the line on compliance and correctness under business pressure, which is critical in a payments context.
