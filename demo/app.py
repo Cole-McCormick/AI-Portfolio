@@ -258,6 +258,46 @@ st.markdown("""
     padding: 16px 20px; font-size: .83rem; color: #374151;
     white-space: pre-wrap; font-family: inherit; line-height: 1.7;
 }
+
+/* ── Page header ─────────────────────────────────────────────────────────── */
+.page-hero {
+    background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+    padding: 24px 28px; margin-bottom: 24px;
+    display: flex; align-items: flex-start; gap: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.ph-icon-wrap {
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+    border-radius: 14px; width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ph-title  { font-size: 1.4rem; font-weight: 800; color: #1e293b; margin: 0 0 6px; }
+.ph-desc   { font-size: .88rem; color: #64748b; margin: 0 0 14px; line-height: 1.55; }
+.ph-steps  { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.ph-step {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 5px 12px; font-size: .77rem; font-weight: 600; color: #374151;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.ph-step-num {
+    background: #4f46e5; color: white; border-radius: 50%;
+    width: 18px; height: 18px; text-align: center; line-height: 18px;
+    font-size: .66rem; font-weight: 800; flex-shrink: 0;
+}
+.ph-arrow  { color: #cbd5e1; font-size: 1rem; line-height: 1; }
+
+/* ── Result summary banner ───────────────────────────────────────────────── */
+.result-banner {
+    background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+    border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 18px 24px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.rb-item { text-align: center; }
+.rb-num  { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+.rb-lbl  { font-size: .72rem; color: #64748b; margin-top: 3px; }
+.rb-divider { width: 1px; height: 36px; background: #e2e8f0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -286,6 +326,28 @@ def bar_color(score: int) -> str:
     if score >= 75: return "#16a34a"
     if score >= 50: return "#d97706"
     return "#6b7280"
+
+
+def page_header(icon: str, title: str, description: str, steps: list) -> None:
+    steps_html = ""
+    for i, step in enumerate(steps):
+        steps_html += (
+            f'<span class="ph-step">'
+            f'<span class="ph-step-num">{i + 1}</span>{step}'
+            f'</span>'
+        )
+        if i < len(steps) - 1:
+            steps_html += '<span class="ph-arrow">›</span>'
+    st.markdown(f"""
+    <div class="page-hero">
+      <div class="ph-icon-wrap">{icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ph-title">{title}</div>
+        <div class="ph-desc">{description}</div>
+        <div class="ph-steps">{steps_html}</div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 @st.cache_data
@@ -337,7 +399,7 @@ def tab_home():
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:230px">
           <div class="hero-stat"><div class="num">60s</div><div class="lbl">to screen 50 resumes</div></div>
           <div class="hero-stat"><div class="num">80%</div><div class="lbl">less screening time</div></div>
-          <div class="hero-stat"><div class="num">4</div><div class="lbl">tools, one platform</div></div>
+          <div class="hero-stat"><div class="num">5</div><div class="lbl">tools, one platform</div></div>
           <div class="hero-stat"><div class="num">$0</div><div class="lbl">to run this demo</div></div>
         </div>
       </div>
@@ -568,8 +630,12 @@ def tab_home():
 # ── Tab: Resume Screener ──────────────────────────────────────────────────────
 
 def tab_screener():
-    st.markdown("## 📋 Screen Resumes")
-    st.caption("Paste your job posting, and we'll score and rank every applicant 0–100 so you know who to call first.")
+    page_header(
+        "📋", "Screen Resumes",
+        "Your job posting is pre-loaded below. Click the button and the AI reads every resume, "
+        "scores each one 0–100, and tells you exactly why — in about 60 seconds.",
+        ["Check the job posting", "Click Screen Resumes", "See who to call first"],
+    )
 
     col_jd, col_resumes = st.columns([1, 1])
     with col_jd:
@@ -626,17 +692,40 @@ def tab_screener():
     if "live_results" not in st.session_state:
         st.caption("Showing pre-loaded sample results. Set `ANTHROPIC_API_KEY` and click the button to run live.")
 
-    st.markdown("---")
     advancing  = sum(1 for r in results if r["score"] >= 75)
     consider   = sum(1 for r in results if 50 <= r["score"] < 75)
+    passing    = sum(1 for r in results if r["score"] < 50 and r["score"] >= 0)
     valid      = [r["score"] for r in results if r["score"] >= 0]
     avg        = round(sum(valid) / len(valid)) if valid else 0
 
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Total Screened", len(results))
-    m2.metric("Advance",        advancing)
-    m3.metric("Consider",       consider)
-    m4.metric("Avg Score",      f"{avg}/100")
+    st.markdown(f"""
+    <div class="result-banner">
+      <div class="rb-item">
+        <div class="rb-num" style="color:#1e293b">{len(results)}</div>
+        <div class="rb-lbl">Total Screened</div>
+      </div>
+      <div class="rb-divider"></div>
+      <div class="rb-item">
+        <div class="rb-num" style="color:#16a34a">{advancing}</div>
+        <div class="rb-lbl">Advance ✓</div>
+      </div>
+      <div class="rb-divider"></div>
+      <div class="rb-item">
+        <div class="rb-num" style="color:#d97706">{consider}</div>
+        <div class="rb-lbl">Consider</div>
+      </div>
+      <div class="rb-divider"></div>
+      <div class="rb-item">
+        <div class="rb-num" style="color:#6b7280">{passing}</div>
+        <div class="rb-lbl">Pass</div>
+      </div>
+      <div class="rb-divider"></div>
+      <div class="rb-item">
+        <div class="rb-num" style="color:#4f46e5">{avg}</div>
+        <div class="rb-lbl">Avg Score / 100</div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<div class="section-lbl">All Candidates — Ranked by Fit Score</div>',
@@ -672,8 +761,12 @@ def tab_screener():
 # ── Tab: Interview Questions ──────────────────────────────────────────────────
 
 def tab_interview():
-    st.markdown("## 💬 Interview Questions")
-    st.caption("Tailored interview questions built from the candidate's actual resume.")
+    page_header(
+        "💬", "Interview Questions",
+        "Pick a candidate from the dropdown, and we'll write interview questions built from their specific background — "
+        "not a generic template. Download the guide to bring into your interview.",
+        ["Pick a candidate", "Click Generate Questions", "Download your interview guide"],
+    )
 
     resume_files = {
         rf.stem.replace("_", " ").title(): rf
@@ -770,8 +863,12 @@ def tab_interview():
 # ── Tab: Scoring Dashboard ────────────────────────────────────────────────────
 
 def tab_dashboard():
-    st.markdown("## 📊 Compare Candidates")
-    st.caption("Side-by-side view of every applicant — color-coded by tier so your whole team agrees on who to advance.")
+    page_header(
+        "📊", "Compare Candidates",
+        "A shareable side-by-side view of every applicant, color-coded by tier. "
+        "Download the report and send it to anyone on your hiring team — no login required.",
+        ["Run Screen Resumes first", "Review the ranked dashboard below", "Download to share with your team"],
+    )
 
     results = load_sample_results()
     if not results:
@@ -808,8 +905,12 @@ def tab_dashboard():
 # ── Tab: JD Analyzer ─────────────────────────────────────────────────────────
 
 def tab_jd_analyzer():
-    st.markdown("## 🔍 Job Posting Grader")
-    st.caption("Find out if your job posting is costing you great candidates — get a letter grade, specific fixes, and a rewritten version ready to post.")
+    page_header(
+        "🔍", "Job Posting Grader",
+        "Paste your job posting and get a letter grade on bias, clarity, and appeal — "
+        "plus a line-by-line rewrite ready to copy and post today.",
+        ["Paste your job posting below", "Click Grade My Job Posting", "Get your grade + a rewritten version"],
+    )
 
     jd_text = st.text_area("Paste your job posting", value=load_sample_jd(),
                            height=260, key="jda_text")
@@ -942,10 +1043,12 @@ def tab_hiring_memos():
         "Pass":           ("#f3f4f6", "#6b7280"),
     }
 
-    st.markdown("## 🗂️ Hiring Briefs")
-    st.caption(
-        "A full write-up on each top candidate — strengths, red flags, salary expectations, "
-        "and a head-to-head comparison ready to drop into your next leadership meeting."
+    page_header(
+        "🗂️", "Hiring Briefs",
+        "Full write-ups on your top candidates — strengths, red flags, salary expectations, "
+        "and a head-to-head comparison ready to drop into your next leadership meeting. "
+        "Pre-loaded sample briefs are shown below.",
+        ["Run Screen Resumes first", "Generate briefs for your top candidates", "Read write-ups + send email drafts"],
     )
 
     results = st.session_state.get("live_results") or load_sample_results()
