@@ -347,13 +347,13 @@ def tab_home():
     # ── Feature cards ──────────────────────────────────────────────────────────
     c1, c2, c3, c4 = st.columns(4)
     cards = [
-        ("📋", "#4f46e5", "Resume Screener",
-         "Score and rank every applicant against your job description in under 60 seconds. Stop reading 50 resumes manually."),
+        ("📋", "#4f46e5", "Screen Resumes",
+         "Score and rank every applicant against your job posting in under 60 seconds. Stop reading 50 resumes manually."),
         ("💬", "#7c3aed", "Interview Questions",
          "Generate tailored interview questions from each candidate's actual resume — not a generic template."),
-        ("📊", "#2563eb", "Scoring Dashboard",
-         "Side-by-side candidate comparison with color-coded tiers. Shareable HTML report for your hiring team."),
-        ("🔍", "#0891b2", "JD Analyzer",
+        ("📊", "#2563eb", "Compare Candidates",
+         "Side-by-side candidate comparison with color-coded tiers. Shareable report for your hiring team."),
+        ("🔍", "#0891b2", "Job Posting Grader",
          "Grade your job posting on bias, clarity, and appeal — then get a rewritten version ready to post today."),
     ]
     for col, (icon, accent, title, desc) in zip([c1, c2, c3, c4], cards):
@@ -453,27 +453,112 @@ def tab_home():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ── How it works ──────────────────────────────────────────────────────────
-    st.markdown("### How it works")
-    s1, s2, s3, s4 = st.columns(4)
-    for col, num, step, detail in zip(
-        [s1, s2, s3, s4], ["1", "2", "3", "4"],
-        ["Paste your JD", "Add resumes", "Get ranked results", "Interview smarter"],
-        [
-            "Upload the job description you're hiring for — paste it in or type it out.",
-            "Add resume files in any format: PDF, Word, or plain text. Any number.",
-            "Claude scores every applicant 0–100 with a plain-English explanation of each score.",
-            "Get tailored interview questions built from each candidate's actual resume.",
-        ],
-    ):
+    # ── Start Here ────────────────────────────────────────────────────────────
+    st.markdown("### Start here — it takes 3 steps")
+    g1, g2, g3 = st.columns(3)
+    guide_steps = [
+        ("1", "📋", "Paste your job posting",
+         "Click the **Screen Resumes** tab, paste in your job posting, and hit the button. "
+         "The AI reads every resume and ranks candidates 0–100 in about 60 seconds."),
+        ("2", "📊", "See who to call first",
+         "Open **Compare Candidates** for a side-by-side view with color-coded tiers — "
+         "Advance, Consider, or Pass — so your whole team is on the same page."),
+        ("3", "🗂️", "Read the hiring briefs",
+         "Open **Hiring Briefs** for a full write-up on each top candidate: "
+         "strengths, red flags, salary signal, and a ready-to-send interview invite."),
+    ]
+    for col, (num, icon, title, detail) in zip([g1, g2, g3], guide_steps):
         with col:
             st.markdown(f"""
-            <div class="step-card">
+            <div class="step-card" style="border-top:4px solid #4f46e5;padding-top:20px">
               <div class="step-num">{num}</div>
-              <div class="step-title">{step}</div>
+              <div style="font-size:1.6rem;margin-bottom:10px">{icon}</div>
+              <div class="step-title">{title}</div>
               <div class="step-detail">{detail}</div>
             </div>
             """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── Live mini-preview ─────────────────────────────────────────────────────
+    st.markdown("### What your results look like")
+    st.caption("Live example — 10 resumes screened against a Senior Python Developer posting.")
+
+    preview_results = load_sample_results()
+    if preview_results:
+        top3 = sorted(preview_results, key=lambda r: r["score"], reverse=True)[:3]
+        for r in top3:
+            s     = r["score"]
+            label, t_col, t_bg = tier_info(s)
+            bc    = bar_color(s)
+            blurb = r["explanation"][:200] + "…" if len(r["explanation"]) > 200 else r["explanation"]
+            st.markdown(f"""
+            <div class="cand-card">
+              <div style="display:flex;align-items:flex-start;gap:16px">
+                <div style="min-width:52px;text-align:center">
+                  <div style="font-size:1.4rem;font-weight:800;color:{bc}">{s}</div>
+                  <div style="font-size:.7rem;color:#94a3b8">/100</div>
+                  <div class="bar-bg">
+                    <div class="bar-fill" style="width:{max(0,min(100,s))}%;background:{bc}"></div>
+                  </div>
+                </div>
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+                    <span style="font-weight:700;font-size:1rem">{r['name']}</span>
+                    <span class="tier-chip" style="color:{t_col};background:{t_bg}">{label}</span>
+                  </div>
+                  <div style="font-size:.875rem;color:#475569;line-height:1.6">{blurb}</div>
+                </div>
+              </div>
+            </div>
+            """, unsafe_allow_html=True)
+        st.caption(f"Showing top 3 of {len(preview_results)} candidates — click **Screen Resumes** to see all results and run your own.")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── Trust signals ─────────────────────────────────────────────────────────
+    st.markdown("""
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:14px;
+                padding:28px 32px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:.08em;color:#94a3b8;margin-bottom:14px">
+        Built for Minnesota businesses
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+        <span class="pill" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569">
+          🏭 Manufacturing
+        </span>
+        <span class="pill" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569">
+          🏥 Healthcare
+        </span>
+        <span class="pill" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569">
+          💼 Professional Services
+        </span>
+        <span class="pill" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569">
+          🛒 Retail
+        </span>
+        <span class="pill" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569">
+          🔧 Light Tech
+        </span>
+      </div>
+      <div style="font-size:.92rem;color:#374151;line-height:1.7;margin-bottom:20px">
+        Most small businesses with 50–500 employees have one HR coordinator — or none at all.
+        HireAI gives your team the hiring firepower of a full recruiting department
+        without adding headcount.
+      </div>
+      <div style="background:#f8fafc;border-radius:10px;padding:18px 22px;">
+        <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;
+                    letter-spacing:.06em;color:#4f46e5;margin-bottom:10px">
+          Interested in using this for your company?
+        </div>
+        <div style="font-size:.92rem;color:#374151">
+          Reach out at <a href="mailto:colebravo@gmail.com" style="color:#4f46e5;font-weight:600">
+          colebravo@gmail.com</a> — I offer a free first screening so you can see results
+          before committing to anything.
+        </div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     if not api_available():
         st.markdown("<br>", unsafe_allow_html=True)
@@ -483,12 +568,12 @@ def tab_home():
 # ── Tab: Resume Screener ──────────────────────────────────────────────────────
 
 def tab_screener():
-    st.markdown("## 📋 Resume Screener")
-    st.caption("Score and rank applicants against your job description.")
+    st.markdown("## 📋 Screen Resumes")
+    st.caption("Paste your job posting, and we'll score and rank every applicant 0–100 so you know who to call first.")
 
     col_jd, col_resumes = st.columns([1, 1])
     with col_jd:
-        jd_text = st.text_area("Job Description", value=load_sample_jd(), height=260,
+        jd_text = st.text_area("Job Posting", value=load_sample_jd(), height=260,
                                key="screener_jd")
     with col_resumes:
         resume_files = list_resume_files()
@@ -602,7 +687,7 @@ def tab_interview():
 
     with col_left:
         candidate = st.selectbox("Candidate", name_list, key="iq_candidate")
-        jd_text   = st.text_area("Job Description", value=load_sample_jd(),
+        jd_text   = st.text_area("Job Posting", value=load_sample_jd(),
                                  height=180, key="iq_jd")
 
         if st.button("Generate Questions", type="primary",
@@ -685,8 +770,8 @@ def tab_interview():
 # ── Tab: Scoring Dashboard ────────────────────────────────────────────────────
 
 def tab_dashboard():
-    st.markdown("## 📊 Scoring Dashboard")
-    st.caption("Shareable HTML comparison report for your hiring team.")
+    st.markdown("## 📊 Compare Candidates")
+    st.caption("Side-by-side view of every applicant — color-coded by tier so your whole team agrees on who to advance.")
 
     results = load_sample_results()
     if not results:
@@ -723,16 +808,16 @@ def tab_dashboard():
 # ── Tab: JD Analyzer ─────────────────────────────────────────────────────────
 
 def tab_jd_analyzer():
-    st.markdown("## 🔍 JD Analyzer")
-    st.caption("Grade your job posting on bias, clarity, inclusivity, and appeal — then get a rewritten version.")
+    st.markdown("## 🔍 Job Posting Grader")
+    st.caption("Find out if your job posting is costing you great candidates — get a letter grade, specific fixes, and a rewritten version ready to post.")
 
-    jd_text = st.text_area("Paste your job description", value=load_sample_jd(),
+    jd_text = st.text_area("Paste your job posting", value=load_sample_jd(),
                            height=260, key="jda_text")
 
     btn_col, _ = st.columns([1, 3])
     with btn_col:
         run = st.button(
-            "Analyze JD" if api_available() else "Analyze JD (API key required)",
+            "Grade My Job Posting" if api_available() else "Grade My Job Posting (API key required)",
             type="primary",
             disabled=not api_available(),
             key="run_jda",
@@ -857,10 +942,10 @@ def tab_hiring_memos():
         "Pass":           ("#f3f4f6", "#6b7280"),
     }
 
-    st.markdown("## 🗂️ Hiring Memos")
+    st.markdown("## 🗂️ Hiring Briefs")
     st.caption(
-        "Per-candidate hiring briefs written by a senior recruiter — "
-        "strengths, red flags, salary signals, and a head-to-head comparison ready for your leadership meeting."
+        "A full write-up on each top candidate — strengths, red flags, salary expectations, "
+        "and a head-to-head comparison ready to drop into your next leadership meeting."
     )
 
     results = st.session_state.get("live_results") or load_sample_results()
@@ -1057,11 +1142,11 @@ def tab_hiring_memos():
 def main():
     tabs = st.tabs([
         "🏠 Home",
-        "📋 Resume Screener",
+        "📋 Screen Resumes",
         "💬 Interview Questions",
-        "📊 Scoring Dashboard",
-        "🔍 JD Analyzer",
-        "🗂️ Hiring Memos",
+        "📊 Compare Candidates",
+        "🔍 Job Posting Grader",
+        "🗂️ Hiring Briefs",
     ])
     with tabs[0]: tab_home()
     with tabs[1]: tab_screener()
